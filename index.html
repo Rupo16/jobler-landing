@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Jobbr. Deja de buscar trabajo: que el trabajo te busque a ti.</title>
+<meta name="description" content="Jobbr te enseña solo ofertas de prácticas y primer empleo que encajan contigo, y te genera el CV adaptado a cada una. Apúntate a la lista y estrena la app con descuento." />
+<meta property="og:title" content="Jobbr. Que el trabajo te busque a ti." />
+<meta property="og:description" content="Ofertas que encajan contigo + CV adaptado a cada una, hecho con IA. Apúntate a la lista y estrena con descuento de lanzamiento." />
+<meta property="og:type" content="website" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  /* ============================================================
+     Tokens de marca (espejo de theme/theme.ts de la app)
+     Sistema de radios: controles 14px, tarjetas 20px. Un acento.
+     ============================================================ */
+  :root {
+    --crema: #F7F4EF;
+    --crema-oscuro: #EFEAE2;
+    --tinta: #1C2B3A;
+    --tinta-suave: #51606F;
+    --azul: #4A90D9;
+    --azul-oscuro: #3A7BC0;
+    --linea: #E3DDD2;
+    --blanco: #FFFFFF;
+    --radio-control: 14px;
+    --radio-tarjeta: 20px;
+    --display: "Bricolage Grotesque", "Segoe UI", sans-serif;
+    --cuerpo: "Inter", -apple-system, "Segoe UI", sans-serif;
+    --mono: "IBM Plex Mono", ui-monospace, monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: var(--cuerpo);
+    background: var(--crema);
+    color: var(--tinta);
+    line-height: 1.6;
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+  }
+  ::selection { background: var(--azul); color: var(--blanco); }
+  img { max-width: 100%; }
+  a { color: inherit; }
+
+  .contenedor { max-width: 1120px; margin: 0 auto; padding: 0 20px; }
+
+  /* ---------- Nav ---------- */
+  nav {
+    position: sticky; top: 0; z-index: 40;
+    background: color-mix(in srgb, var(--crema) 88%, transparent);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--linea);
+  }
+  .nav-inner {
+    height: 64px; display: flex; align-items: center; justify-content: space-between;
+  }
+  .marca {
+    font-family: var(--display); font-weight: 800; font-size: 22px;
+    letter-spacing: -0.5px; text-decoration: none;
+  }
+  .marca span { color: var(--azul); }
+  .nav-cta {
+    font-family: var(--cuerpo); font-weight: 600; font-size: 14px;
+    color: var(--blanco); background: var(--azul); text-decoration: none;
+    padding: 9px 18px; border-radius: var(--radio-control);
+    transition: transform .15s ease, background .15s ease;
+  }
+  .nav-cta:hover { background: var(--azul-oscuro); }
+  .nav-cta:active { transform: scale(.98); }
+
+  /* ---------- Hero ---------- */
+  .hero {
+    min-height: calc(100dvh - 64px);
+    display: grid; grid-template-columns: 1.1fr .9fr;
+    align-items: center; gap: 48px;
+    padding: 48px 0 64px;
+  }
+  h1 {
+    font-family: var(--display); font-weight: 800;
+    font-size: clamp(38px, 5.2vw, 60px);
+    line-height: 1.04; letter-spacing: -1.5px;
+    margin-bottom: 20px;
+  }
+  h1 .acento { color: var(--azul); }
+  .hero-sub {
+    font-size: 18px; color: var(--tinta-suave); max-width: 46ch;
+    margin-bottom: 28px;
+  }
+
+  /* ---------- Formulario ---------- */
+  .form-bloque { max-width: 440px; }
+  .campo { display: flex; flex-direction: column; gap: 8px; }
+  .campo label { font-weight: 600; font-size: 14px; }
+  .fila-form { display: flex; gap: 10px; }
+  .campo input[type="email"] {
+    flex: 1; min-width: 0;
+    font-family: var(--cuerpo); font-size: 16px; color: var(--tinta);
+    background: var(--blanco); border: 1.5px solid var(--linea);
+    border-radius: var(--radio-control); padding: 13px 16px;
+    transition: border-color .15s ease;
+  }
+  .campo input[type="email"]::placeholder { color: #8A94A0; }
+  .campo input[type="email"]:focus {
+    outline: 2px solid var(--azul); outline-offset: 1px; border-color: var(--azul);
+  }
+  .boton {
+    font-family: var(--cuerpo); font-weight: 600; font-size: 16px;
+    color: var(--blanco); background: var(--azul);
+    border: none; border-radius: var(--radio-control);
+    padding: 13px 22px; cursor: pointer; white-space: nowrap;
+    transition: transform .15s ease, background .15s ease;
+  }
+  .boton:hover { background: var(--azul-oscuro); }
+  .boton:active { transform: scale(.98); }
+  .boton[disabled] { opacity: .65; cursor: wait; }
+  .ayuda {
+    font-size: 13px; color: var(--tinta-suave); margin-top: 10px;
+  }
+  .ayuda a { color: var(--tinta-suave); }
+  .error-form {
+    display: none; font-size: 14px; color: #B4453A; margin-top: 10px; font-weight: 500;
+  }
+  .error-form.visible { display: block; }
+
+  /* Estado de éxito: sustituye al formulario */
+  .exito {
+    display: none;
+    background: var(--blanco); border: 1.5px solid var(--linea);
+    border-radius: var(--radio-tarjeta); padding: 24px;
+  }
+  .exito.visible { display: block; }
+  .exito h3 { font-family: var(--display); font-size: 22px; margin-bottom: 6px; }
+  .exito p { font-size: 15px; color: var(--tinta-suave); margin-bottom: 16px; }
+  .exito .fila-form { flex-wrap: wrap; }
+  .boton-secundario {
+    font-family: var(--cuerpo); font-weight: 600; font-size: 15px;
+    color: var(--tinta); background: var(--crema);
+    border: 1.5px solid var(--linea); border-radius: var(--radio-control);
+    padding: 11px 18px; cursor: pointer; text-decoration: none;
+    transition: transform .15s ease, background .15s ease;
+    display: inline-block;
+  }
+  .boton-secundario:hover { background: var(--crema-oscuro); }
+  .boton-secundario:active { transform: scale(.98); }
+
+  /* ---------- Baraja de tarjetas (demo real e interactiva) ---------- */
+  .demo { position: relative; height: 420px; user-select: none; -webkit-user-select: none; }
+  .tarjeta {
+    position: absolute; inset: 0; margin: auto;
+    width: min(320px, 88%); height: 400px;
+    background: var(--blanco);
+    border: 1px solid var(--linea);
+    border-radius: var(--radio-tarjeta);
+    padding: 26px 24px;
+    display: flex; flex-direction: column;
+    box-shadow: 0 12px 32px rgba(28, 43, 58, .10);
+    touch-action: pan-y;
+  }
+  .tarjeta[data-pos="0"] { z-index: 3; cursor: grab; }
+  .tarjeta[data-pos="0"]:active { cursor: grabbing; }
+  .tarjeta[data-pos="1"] { z-index: 2; transform: scale(.95) translateY(26px); opacity: .85; }
+  .tarjeta[data-pos="2"] { z-index: 1; transform: scale(.9) translateY(50px); opacity: .55; }
+  .tarjeta .mono-linea {
+    font-family: var(--mono); font-size: 12px; letter-spacing: .5px;
+    color: var(--azul); margin-bottom: 14px;
+  }
+  .tarjeta h4 {
+    font-family: var(--display); font-weight: 700; font-size: 24px;
+    line-height: 1.15; letter-spacing: -0.5px; margin-bottom: 6px;
+  }
+  .tarjeta .empresa { font-size: 15px; color: var(--tinta-suave); margin-bottom: 18px; }
+  .tarjeta .desc {
+    font-size: 14px; color: var(--tinta-suave); line-height: 1.55;
+    flex: 1; overflow: hidden;
+  }
+  .tarjeta .pie-tarjeta {
+    font-family: var(--mono); font-size: 11.5px; color: var(--tinta-suave);
+    border-top: 1px solid var(--linea); padding-top: 14px; margin-top: 14px;
+  }
+  .sello {
+    position: absolute; top: 22px; right: 20px;
+    font-family: var(--display); font-weight: 800; font-size: 18px;
+    color: var(--azul); border: 2.5px solid var(--azul);
+    border-radius: 10px; padding: 4px 10px; transform: rotate(8deg);
+    opacity: 0; pointer-events: none;
+  }
+  .sello.no { color: #B4453A; border-color: #B4453A; transform: rotate(-8deg); left: 20px; right: auto; }
+  .pista-demo {
+    text-align: center; font-size: 13.5px; color: var(--tinta-suave);
+    margin-top: 14px;
+  }
+
+  /* ---------- Secciones ---------- */
+  section { padding: 88px 0; }
+  h2 {
+    font-family: var(--display); font-weight: 800;
+    font-size: clamp(28px, 3.8vw, 42px);
+    line-height: 1.1; letter-spacing: -1px;
+    margin-bottom: 18px; max-width: 24ch;
+  }
+
+  /* Problema: bloque editorial */
+  .problema { border-top: 1px solid var(--linea); }
+  .problema .prosa { max-width: 62ch; font-size: 18px; color: var(--tinta-suave); }
+  .problema .prosa p { margin-bottom: 14px; }
+  .problema .prosa strong { color: var(--tinta); }
+
+  /* Cómo funciona: filas con hairline */
+  .pasos { border-top: 1px solid var(--linea); }
+  .paso {
+    display: grid; grid-template-columns: 220px 1fr; gap: 24px;
+    padding: 30px 0; border-bottom: 1px solid var(--linea);
+    align-items: start;
+  }
+  .paso:last-of-type { border-bottom: none; }
+  .paso h3 {
+    font-family: var(--display); font-weight: 700; font-size: 24px;
+    letter-spacing: -0.5px;
+  }
+  .paso p { color: var(--tinta-suave); max-width: 56ch; margin-bottom: 8px; }
+  .paso .mono-dato {
+    font-family: var(--mono); font-size: 12.5px; color: var(--azul); letter-spacing: .4px;
+  }
+
+  /* Incentivo: único bloque de color de la página (composición deliberada) */
+  .oferta { background: var(--tinta); color: var(--crema); }
+  .oferta h2 { color: var(--blanco); }
+  .oferta-grid {
+    display: grid; grid-template-columns: 1.2fr 1fr; gap: 40px; align-items: center;
+  }
+  .oferta .detalle p { color: #B9C3CE; font-size: 17px; max-width: 50ch; margin-bottom: 22px; }
+  .ventaja { display: flex; gap: 14px; margin-bottom: 18px; align-items: baseline; }
+  .ventaja .check {
+    font-family: var(--mono); color: var(--azul); font-size: 15px; flex-shrink: 0;
+  }
+  .ventaja div h3 { font-size: 17px; font-weight: 600; color: var(--blanco); margin-bottom: 2px; }
+  .ventaja div p { font-size: 15px; color: #B9C3CE; margin: 0; }
+  .cupon {
+    background: rgba(255, 255, 255, .06);
+    border: 1px dashed rgba(255, 255, 255, .3);
+    border-radius: var(--radio-tarjeta);
+    padding: 28px; text-align: center;
+  }
+  .cupon .mono-linea { font-family: var(--mono); font-size: 12px; letter-spacing: 1px; color: var(--azul); margin-bottom: 10px; }
+  .cupon .grande {
+    font-family: var(--display); font-weight: 800; font-size: 40px;
+    letter-spacing: -1px; color: var(--blanco); line-height: 1.1; margin-bottom: 8px;
+  }
+  .cupon p { color: #B9C3CE; font-size: 14px; }
+
+  /* FAQ */
+  .faq details {
+    border-bottom: 1px solid var(--linea); padding: 18px 0;
+  }
+  .faq details:first-of-type { border-top: 1px solid var(--linea); }
+  .faq summary {
+    font-weight: 600; font-size: 17px; cursor: pointer; list-style: none;
+    display: flex; justify-content: space-between; align-items: center; gap: 16px;
+  }
+  .faq summary::-webkit-details-marker { display: none; }
+  .faq summary::after { content: "+"; font-family: var(--mono); font-size: 20px; color: var(--azul); transition: transform .2s ease; }
+  .faq details[open] summary::after { transform: rotate(45deg); }
+  .faq details p { color: var(--tinta-suave); padding-top: 10px; max-width: 62ch; }
+  .faq details a { color: var(--azul); }
+
+  /* CTA final */
+  .cierre { text-align: left; }
+  .cierre .form-bloque { max-width: 440px; }
+
+  /* Footer */
+  footer {
+    border-top: 1px solid var(--linea); padding: 32px 0 40px;
+    font-size: 14px; color: var(--tinta-suave);
+  }
+  .footer-inner { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; }
+  .footer-links { display: flex; gap: 20px; }
+  .footer-links a { color: var(--tinta-suave); text-decoration: none; }
+  .footer-links a:hover { color: var(--tinta); text-decoration: underline; }
+
+  /* ---------- Animaciones de entrada (solo transform/opacity) ---------- */
+  @media (prefers-reduced-motion: no-preference) {
+    .revelar { opacity: 0; transform: translateY(22px); transition: opacity .6s cubic-bezier(.16,1,.3,1), transform .6s cubic-bezier(.16,1,.3,1); }
+    .revelar.dentro { opacity: 1; transform: translateY(0); }
+    .tarjeta { transition: transform .25s cubic-bezier(.16,1,.3,1), opacity .25s ease; }
+    .tarjeta.arrastrando { transition: none; }
+    .tarjeta.saliendo { transition: transform .45s cubic-bezier(.5,0,.75,0), opacity .45s ease; }
+    .sello { transition: opacity .15s ease; }
+  }
+
+  /* ---------- Móvil ---------- */
+  @media (max-width: 860px) {
+    .hero { grid-template-columns: 1fr; gap: 40px; min-height: auto; padding: 40px 0 56px; }
+    .demo { height: 380px; }
+    .tarjeta { height: 360px; }
+    .paso { grid-template-columns: 1fr; gap: 8px; padding: 24px 0; }
+    .oferta-grid { grid-template-columns: 1fr; gap: 28px; }
+    section { padding: 64px 0; }
+    .fila-form { flex-direction: column; }
+    .boton { width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="contenedor nav-inner">
+    <a class="marca" href="#">Jobbr<span>.</span></a>
+    <a class="nav-cta" href="#apuntarse">Unirme a la lista</a>
+  </div>
+</nav>
+
+<header class="contenedor hero">
+  <div>
+    <h1>Mandas 40 CVs.<br />Te contestan <span class="acento">cero</span>.</h1>
+    <p class="hero-sub">Jobbr te enseña solo ofertas de prácticas y primer empleo que encajan contigo, y te genera el CV adaptado a cada una.</p>
+
+    <div class="form-bloque" id="apuntarse">
+      <form class="form-waitlist" novalidate>
+        <div class="campo">
+          <label for="email-hero">Tu correo</label>
+          <div class="fila-form">
+            <input type="email" id="email-hero" name="email" placeholder="tu@correo.com" autocomplete="email" required />
+            <button type="submit" class="boton">Unirme a la lista</button>
+          </div>
+        </div>
+        <p class="error-form" role="alert"></p>
+        <p class="ayuda">Gratis. Un solo correo cuando lancemos, con tu <strong>descuento de lanzamiento</strong> dentro. Al apuntarte aceptas la <a href="https://rupo16.github.io/jobbr-legal/privacidad" target="_blank" rel="noopener">política de privacidad</a>.</p>
+      </form>
+      <div class="exito" role="status">
+        <h3>Estás dentro.</h3>
+        <p>Cuando lancemos te llegará un correo con tu descuento. Mientras tanto, si conoces a alguien que también esté buscando prácticas, pásaselo:</p>
+        <div class="fila-form">
+          <a class="boton-secundario compartir-wa" href="#" target="_blank" rel="noopener">Compartir por WhatsApp</a>
+          <button type="button" class="boton-secundario copiar-enlace">Copiar enlace</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <div class="demo" aria-label="Demostración de la app: desliza la tarjeta de oferta">
+      <!-- Baraja real e interactiva: es el mismo patrón de tarjeta que usa la app -->
+      <article class="tarjeta" data-pos="2">
+        <p class="mono-linea">&rsaquo; 79% MATCH &middot; 19.000 EUR/A&Ntilde;O</p>
+        <h4>Atención al Cliente Junior</h4>
+        <p class="empresa">Vueling &middot; Barcelona &middot; Híbrido</p>
+        <p class="desc">Primer empleo en el equipo de experiencia de cliente. Inglés B2, sin experiencia previa necesaria. Formación a cargo de la empresa.</p>
+        <p class="pie-tarjeta">&rsaquo; encaja por tu nivel de inglés</p>
+        <span class="sello si">ME INTERESA</span>
+        <span class="sello no">PASO</span>
+      </article>
+      <article class="tarjeta" data-pos="1">
+        <p class="mono-linea">&rsaquo; 84% MATCH &middot; SALARIO NO PUBLICADO</p>
+        <h4>Prácticas en Recursos Humanos</h4>
+        <p class="empresa">Mercadona &middot; Valencia &middot; Presencial</p>
+        <p class="desc">Prácticas curriculares en el equipo de selección. Convenio con universidad. Media jornada de mañanas compatible con clases.</p>
+        <p class="pie-tarjeta">&rsaquo; encaja por tu grado y tu ciudad</p>
+        <span class="sello si">ME INTERESA</span>
+        <span class="sello no">PASO</span>
+      </article>
+      <article class="tarjeta" data-pos="0">
+        <p class="mono-linea">&rsaquo; 87% MATCH &middot; 600 EUR/MES</p>
+        <h4>Prácticas de Marketing Digital</h4>
+        <p class="empresa">Flykube &middot; Valencia &middot; Híbrido</p>
+        <p class="desc">Gestión de redes, creación de contenido y análisis de campañas en una startup de viajes. Remuneradas, media jornada compatible con clases.</p>
+        <p class="pie-tarjeta">&rsaquo; si te interesa, tu CV adaptado se genera solo</p>
+        <span class="sello si">ME INTERESA</span>
+        <span class="sello no">PASO</span>
+      </article>
+    </div>
+    <p class="pista-demo">Pruébalo: arrastra la tarjeta hacia un lado.</p>
+  </div>
+</header>
+
+<section class="problema">
+  <div class="contenedor revelar">
+    <h2>Buscar el primer empleo se ha convertido en un trabajo sin sueldo.</h2>
+    <div class="prosa">
+      <p>Portales infinitos. Ofertas "junior" que piden tres años de experiencia. Salarios que no aparecen hasta la última entrevista. Y el mismo CV genérico para todo, porque adaptarlo a cada oferta te llevaría horas que no tienes.</p>
+      <p><strong>No es que tu perfil no valga. Es que el sistema está montado para hacerte perder el tiempo.</strong> Jobbr existe para darle la vuelta: tú dices qué buscas, y la app hace el trabajo sucio.</p>
+    </div>
+  </div>
+</section>
+
+<section class="pasos">
+  <div class="contenedor">
+    <h2 class="revelar">Así funciona</h2>
+    <div class="paso revelar">
+      <h3>Cuéntale qué buscas</h3>
+      <div>
+        <p>Prácticas o primer empleo, en tu ciudad o donde sea, presencial o remoto. Preguntas de una en una, sin formularios eternos.</p>
+        <p class="mono-dato">&rsaquo; 2 minutos, una sola vez</p>
+      </div>
+    </div>
+    <div class="paso revelar">
+      <h3>Desliza</h3>
+      <div>
+        <p>Solo ves ofertas que encajan contigo, ordenadas de más a menos match y con el salario a la vista cuando la empresa lo publica. Nada de scrollear 200 resultados.</p>
+        <p class="mono-dato">&rsaquo; % de match y motivo en cada oferta</p>
+      </div>
+    </div>
+    <div class="paso revelar">
+      <h3>Tu CV se adapta solo</h3>
+      <div>
+        <p>Si una oferta te interesa, la IA reescribe tu currículum para ese puesto concreto, con tus datos reales, y te lo descarga en PDF listo para enviar.</p>
+        <p class="mono-dato">&rsaquo; un CV distinto para cada oferta, en segundos</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="oferta">
+  <div class="contenedor oferta-grid">
+    <div class="detalle revelar">
+      <h2>Apuntarse tiene premio</h2>
+      <p>La app está en la última fase antes del lanzamiento. La lista de espera no es humo: es la puerta de entrada.</p>
+      <div class="ventaja">
+        <span class="check">&rsaquo;</span>
+        <div>
+          <h3>Descuento de lanzamiento</h3>
+          <p>Los de la lista estrenan Jobbr pagando menos que nadie. Te llegará con el correo de lanzamiento.</p>
+        </div>
+      </div>
+      <div class="ventaja">
+        <span class="check">&rsaquo;</span>
+        <div>
+          <h3>Acceso antes que nadie</h3>
+          <p>Entras cuando abramos las puertas, antes de que la app llegue a las stores para todo el mundo.</p>
+        </div>
+      </div>
+    </div>
+    <div class="cupon revelar">
+      <p class="mono-linea">&rsaquo; RESERVADO PARA LA LISTA</p>
+      <p class="grande">Tu descuento te espera</p>
+      <p>Se aplica al precio de lanzamiento. Sin letra pequeña: si la app no te convence, no pagas nada.</p>
+    </div>
+  </div>
+</section>
+
+<section class="faq">
+  <div class="contenedor revelar">
+    <h2>Preguntas rápidas</h2>
+    <details>
+      <summary>¿Apuntarse cuesta algo?</summary>
+      <p>No. Apuntarte a la lista es gratis y no te compromete a nada. El descuento se aplica al precio de la app cuando lancemos, si decides usarla.</p>
+    </details>
+    <details>
+      <summary>¿Es solo para gente de tech?</summary>
+      <p>No. Jobbr cubre todos los sectores: marketing, ADE, enfermería, ingeniería, derecho, lo que estudies. Si buscas prácticas o tu primer empleo, es para ti.</p>
+    </details>
+    <details>
+      <summary>¿Cuándo sale la app?</summary>
+      <p>Está en la última fase de pruebas. Los de la lista serán los primeros en saberlo y en entrar; por eso existe esta página.</p>
+    </details>
+    <details>
+      <summary>¿Qué haréis con mi correo?</summary>
+      <p>Avisarte del lanzamiento con tu descuento. Nada más: sin spam ni cesión a terceros, y puedes pedir que lo borremos cuando quieras. Detalles en la <a href="https://rupo16.github.io/jobbr-legal/privacidad" target="_blank" rel="noopener">política de privacidad</a>.</p>
+    </details>
+    <details>
+      <summary>¿Quién hay detrás de esto?</summary>
+      <p>Emilio, estudiante de Ingeniería Informática en la UPV. Jobbr nace de sufrir en primera persona lo que es buscar prácticas: lo construyo porque es la app que me habría gustado tener.</p>
+    </details>
+  </div>
+</section>
+
+<section class="cierre">
+  <div class="contenedor revelar">
+    <h2>El próximo curso, que las ofertas te busquen a ti.</h2>
+    <div class="form-bloque">
+      <form class="form-waitlist" novalidate>
+        <div class="campo">
+          <label for="email-cierre">Tu correo</label>
+          <div class="fila-form">
+            <input type="email" id="email-cierre" name="email" placeholder="tu@correo.com" autocomplete="email" required />
+            <button type="submit" class="boton">Unirme a la lista</button>
+          </div>
+        </div>
+        <p class="error-form" role="alert"></p>
+        <p class="ayuda">Gratis y sin spam. Al apuntarte aceptas la <a href="https://rupo16.github.io/jobbr-legal/privacidad" target="_blank" rel="noopener">política de privacidad</a>.</p>
+      </form>
+      <div class="exito" role="status">
+        <h3>Estás dentro.</h3>
+        <p>Cuando lancemos te llegará un correo con tu descuento. Si conoces a alguien buscando prácticas, pásaselo:</p>
+        <div class="fila-form">
+          <a class="boton-secundario compartir-wa" href="#" target="_blank" rel="noopener">Compartir por WhatsApp</a>
+          <button type="button" class="boton-secundario copiar-enlace">Copiar enlace</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="contenedor footer-inner">
+    <span>Jobbr &copy; 2026</span>
+    <div class="footer-links">
+      <a href="https://rupo16.github.io/jobbr-legal/terminos" target="_blank" rel="noopener">Términos</a>
+      <a href="https://rupo16.github.io/jobbr-legal/privacidad" target="_blank" rel="noopener">Privacidad</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  /* ============================================================
+     CONFIGURACIÓN: rellena estos dos valores antes de desplegar.
+     La anon key de Supabase está diseñada para ser pública: la
+     seguridad la pone la política RLS (solo permite INSERT).
+     Ver landing/README.md.
+     ============================================================ */
+  const SUPABASE_URL = 'https://igyvmroekokjjtdjuywm.supabase.co';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlneXZtcm9la29ramp0ZGp1eXdtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE4NzI5ODEsImV4cCI6MjA5NzQ0ODk4MX0.VKOGHiD-MhAGK_i3iqiHuhULCC018sOx1kRX2gwMAok';
+
+  /* ---------- Formulario de waitlist (dos instancias, misma lógica) ---------- */
+  const fuente = new URLSearchParams(location.search).get('src') || 'directo';
+
+  document.querySelectorAll('.form-waitlist').forEach((form) => {
+    const input = form.querySelector('input[type="email"]');
+    const boton = form.querySelector('button[type="submit"]');
+    const error = form.querySelector('.error-form');
+    const exito = form.parentElement.querySelector('.exito');
+
+    const mostrarError = (msg) => { error.textContent = msg; error.classList.add('visible'); };
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      error.classList.remove('visible');
+
+      const email = input.value.trim().toLowerCase();
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) {
+        mostrarError('Ese correo no parece válido. Revísalo.');
+        input.focus();
+        return;
+      }
+      if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+        mostrarError('El formulario aún no está conectado. Vuelve en un rato.');
+        return;
+      }
+
+      boton.disabled = true;
+      boton.textContent = 'Apuntando...';
+      try {
+        const res = await fetch(SUPABASE_URL + '/rest/v1/waitlist', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            apikey: SUPABASE_ANON_KEY,
+            Authorization: 'Bearer ' + SUPABASE_ANON_KEY,
+            Prefer: 'return=minimal',
+          },
+          body: JSON.stringify({ email, source: fuente }),
+        });
+        // 409 = correo repetido (índice único): para el usuario es lo mismo que estar dentro.
+        if (!res.ok && res.status !== 409) throw new Error('HTTP ' + res.status);
+        form.style.display = 'none';
+        exito.classList.add('visible');
+      } catch (err) {
+        console.error('waitlist:', err);
+        mostrarError('No se pudo guardar tu correo. Inténtalo de nuevo en un momento.');
+        boton.disabled = false;
+        boton.textContent = 'Unirme a la lista';
+      }
+    });
+  });
+
+  /* ---------- Compartir tras apuntarse (bucle de referidos) ---------- */
+  const urlCompartir = location.origin + location.pathname + '?src=amigo';
+  const textoCompartir = 'Mira esta app para encontrar prácticas y primer empleo: te enseña solo ofertas que encajan contigo y te genera el CV adaptado a cada una. Apúntate a la lista: ' + urlCompartir;
+  document.querySelectorAll('.compartir-wa').forEach((a) => {
+    a.href = 'https://wa.me/?text=' + encodeURIComponent(textoCompartir);
+  });
+  document.querySelectorAll('.copiar-enlace').forEach((b) => {
+    b.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(urlCompartir);
+        b.textContent = 'Copiado';
+        setTimeout(() => { b.textContent = 'Copiar enlace'; }, 2000);
+      } catch { /* portapapeles no disponible: sin drama */ }
+    });
+  });
+
+  /* ---------- Revelado al hacer scroll (IntersectionObserver, sin listeners de scroll) ---------- */
+  const sinMovimiento = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!sinMovimiento && 'IntersectionObserver' in window) {
+    const io = new IntersectionObserver((entradas) => {
+      entradas.forEach((en) => {
+        if (en.isIntersecting) { en.target.classList.add('dentro'); io.unobserve(en.target); }
+      });
+    }, { threshold: 0.15 });
+    document.querySelectorAll('.revelar').forEach((el) => io.observe(el));
+  } else {
+    document.querySelectorAll('.revelar').forEach((el) => el.classList.add('dentro'));
+  }
+
+  /* ---------- Baraja interactiva: mismo gesto que la app ---------- */
+  const demo = document.querySelector('.demo');
+  if (demo) {
+    let arrastre = null;
+
+    const topCard = () => demo.querySelector('.tarjeta[data-pos="0"]');
+
+    const reordenar = () => {
+      const tarjetas = Array.from(demo.querySelectorAll('.tarjeta'));
+      tarjetas.forEach((t) => {
+        const pos = Number(t.dataset.pos);
+        t.dataset.pos = String(pos === 0 ? tarjetas.length - 1 : pos - 1);
+        t.style.transform = '';
+      });
+    };
+
+    demo.addEventListener('pointerdown', (e) => {
+      const carta = e.target.closest('.tarjeta');
+      if (!carta || carta.dataset.pos !== '0') return;
+      arrastre = { carta, x0: e.clientX, dx: 0 };
+      carta.classList.add('arrastrando');
+      carta.setPointerCapture(e.pointerId);
+    });
+
+    demo.addEventListener('pointermove', (e) => {
+      if (!arrastre) return;
+      arrastre.dx = e.clientX - arrastre.x0;
+      const rot = arrastre.dx / 18;
+      arrastre.carta.style.transform = 'translateX(' + arrastre.dx + 'px) rotate(' + rot + 'deg)';
+      const si = arrastre.carta.querySelector('.sello.si');
+      const no = arrastre.carta.querySelector('.sello.no');
+      si.style.opacity = Math.min(1, Math.max(0, arrastre.dx / 80));
+      no.style.opacity = Math.min(1, Math.max(0, -arrastre.dx / 80));
+    });
+
+    const soltar = () => {
+      if (!arrastre) return;
+      const { carta, dx } = arrastre;
+      arrastre = null;
+      carta.classList.remove('arrastrando');
+      const si = carta.querySelector('.sello.si');
+      const no = carta.querySelector('.sello.no');
+      if (Math.abs(dx) > 90) {
+        const dir = dx > 0 ? 1 : -1;
+        carta.classList.add('saliendo');
+        carta.style.transform = 'translateX(' + dir * 560 + 'px) rotate(' + dir * 24 + 'deg)';
+        carta.style.opacity = '0';
+        setTimeout(() => {
+          carta.classList.remove('saliendo');
+          carta.style.opacity = '';
+          si.style.opacity = 0;
+          no.style.opacity = 0;
+          reordenar();
+        }, sinMovimiento ? 0 : 420);
+      } else {
+        carta.style.transform = '';
+        si.style.opacity = 0;
+        no.style.opacity = 0;
+      }
+    };
+    demo.addEventListener('pointerup', soltar);
+    demo.addEventListener('pointercancel', soltar);
+  }
+</script>
+</body>
+</html>
