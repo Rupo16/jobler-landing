@@ -320,6 +320,10 @@
 
   /* ---------- Móvil ---------- */
   @media (max-width: 860px) {
+    .contenedor {
+      padding-left: max(28px, env(safe-area-inset-left, 0px));
+      padding-right: max(28px, env(safe-area-inset-right, 0px));
+    }
     .hero { grid-template-columns: 1fr; gap: 40px; min-height: auto; padding: 40px 0 56px; }
     .demo { height: 380px; }
     .tarjeta { height: 360px; }
