@@ -2,17 +2,23 @@
 <html lang="es">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#F7F4EF" />
 <title>Jobler. Deja de buscar trabajo: que el trabajo te busque a ti.</title>
 <meta name="description" content="Jobler te enseña solo ofertas de prácticas y primer empleo que encajan contigo, y te genera el CV adaptado a cada una. Apúntate a la lista y estrena la app con descuento." />
 <meta property="og:title" content="Jobler. Que el trabajo te busque a ti." />
 <meta property="og:description" content="Ofertas que encajan contigo + CV adaptado a cada una, hecho con IA. Apúntate a la lista y estrena con descuento de lanzamiento." />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://jobler.es/" />
+<meta property="og:image" content="https://jobler.es/og-image.png" />
+<meta property="og:locale" content="es_ES" />
+<meta property="og:site_name" content="Jobler" />
+<meta name="twitter:card" content="summary_large_image" />
 <link rel="canonical" href="https://jobler.es/" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%234A90D9'/%3E%3Ctext x='32' y='46' font-family='Arial,sans-serif' font-size='40' font-weight='bold' fill='white' text-anchor='middle'%3EJ%3C/text%3E%3C/svg%3E" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=IBM+Plex+Mono&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
 <style>
   /* ============================================================
      Tokens de marca (espejo de theme/theme.ts de la app)
@@ -76,6 +82,7 @@
 
   /* ---------- Hero ---------- */
   .hero {
+    min-height: calc(100vh - 64px); /* fallback para webviews sin dvh */
     min-height: calc(100dvh - 64px);
     display: grid; grid-template-columns: 1.1fr .9fr;
     align-items: center; gap: 48px;
@@ -283,6 +290,23 @@
   .footer-links a { color: var(--tinta-suave); text-decoration: none; }
   .footer-links a:hover { color: var(--tinta); text-decoration: underline; }
 
+  /* ---------- CTA fija en móvil (zona del pulgar) ----------
+     Aparece solo cuando ningún formulario está a la vista, y desaparece
+     al apuntarse. En escritorio no existe: el nav ya cumple ese papel. */
+  .cta-fija {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 50;
+    display: none;
+    padding: 10px 16px calc(10px + env(safe-area-inset-bottom, 0px));
+    background: var(--crema);
+    background: color-mix(in srgb, var(--crema) 92%, transparent);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-top: 1px solid var(--linea);
+    transform: translateY(110%); visibility: hidden;
+  }
+  .cta-fija.visible { transform: translateY(0); visibility: visible; }
+  .cta-fija .boton { display: block; width: 100%; text-align: center; text-decoration: none; }
+
   /* ---------- Animaciones de entrada (solo transform/opacity) ---------- */
   @media (prefers-reduced-motion: no-preference) {
     .revelar { opacity: 0; transform: translateY(22px); transition: opacity .6s cubic-bezier(.16,1,.3,1), transform .6s cubic-bezier(.16,1,.3,1); }
@@ -291,6 +315,7 @@
     .tarjeta.arrastrando { transition: none; }
     .tarjeta.saliendo { transition: transform .45s cubic-bezier(.5,0,.75,0), opacity .45s ease; }
     .sello { transition: opacity .15s ease; }
+    .cta-fija { transition: transform .3s cubic-bezier(.16,1,.3,1), visibility .3s; }
   }
 
   /* ---------- Móvil ---------- */
@@ -303,6 +328,14 @@
     section { padding: 64px 0; }
     .fila-form { flex-direction: column; }
     .boton { width: 100%; }
+    .cta-fija { display: block; }
+  }
+
+  /* Pantallas estrechas (móviles pequeños, webview de TikTok con barras) */
+  @media (max-width: 380px) {
+    h1 { font-size: 34px; letter-spacing: -1px; }
+    .demo { height: 340px; }
+    .tarjeta { height: 320px; }
   }
 </style>
 </head>
@@ -325,7 +358,7 @@
         <div class="campo">
           <label for="email-hero">Tu correo</label>
           <div class="fila-form">
-            <input type="email" id="email-hero" name="email" placeholder="tu@correo.com" autocomplete="email" required />
+            <input type="email" id="email-hero" name="email" placeholder="tu@correo.com" autocomplete="email" inputmode="email" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="send" required />
             <button type="submit" class="boton">Unirme a la lista</button>
           </div>
         </div>
@@ -477,7 +510,7 @@
         <div class="campo">
           <label for="email-cierre">Tu correo</label>
           <div class="fila-form">
-            <input type="email" id="email-cierre" name="email" placeholder="tu@correo.com" autocomplete="email" required />
+            <input type="email" id="email-cierre" name="email" placeholder="tu@correo.com" autocomplete="email" inputmode="email" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="send" required />
             <button type="submit" class="boton">Unirme a la lista</button>
           </div>
         </div>
@@ -495,6 +528,12 @@
     </div>
   </div>
 </section>
+
+<div class="cta-fija">
+  <div class="contenedor">
+    <a class="boton" href="#apuntarse">Unirme a la lista</a>
+  </div>
+</div>
 
 <footer>
   <div class="contenedor footer-inner">
@@ -559,6 +598,9 @@
         if (!res.ok && res.status !== 409) throw new Error('HTTP ' + res.status);
         form.style.display = 'none';
         exito.classList.add('visible');
+        // Ya apuntado: la barra fija de móvil deja de tener sentido.
+        const barraCta = document.querySelector('.cta-fija');
+        if (barraCta) barraCta.classList.remove('visible');
       } catch (err) {
         console.error('waitlist:', err);
         mostrarError('No se pudo guardar tu correo. Inténtalo de nuevo en un momento.');
@@ -576,11 +618,26 @@
   });
   document.querySelectorAll('.copiar-enlace').forEach((b) => {
     b.addEventListener('click', async () => {
+      let copiado = false;
       try {
         await navigator.clipboard.writeText(urlCompartir);
+        copiado = true;
+      } catch {
+        // Los navegadores dentro de apps (TikTok, Instagram) a veces bloquean
+        // el portapapeles moderno: probamos la vía clásica.
+        const ta = document.createElement('textarea');
+        ta.value = urlCompartir;
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        try { copiado = document.execCommand('copy'); } catch { /* sin drama */ }
+        ta.remove();
+      }
+      if (copiado) {
         b.textContent = 'Copiado';
         setTimeout(() => { b.textContent = 'Copiar enlace'; }, 2000);
-      } catch { /* portapapeles no disponible: sin drama */ }
+      }
     });
   });
 
@@ -595,6 +652,21 @@
     document.querySelectorAll('.revelar').forEach((el) => io.observe(el));
   } else {
     document.querySelectorAll('.revelar').forEach((el) => el.classList.add('dentro'));
+  }
+
+  /* ---------- CTA fija en móvil: visible solo si ningún formulario está a la vista ---------- */
+  const barra = document.querySelector('.cta-fija');
+  if (barra && 'IntersectionObserver' in window) {
+    const bloquesForm = document.querySelectorAll('.form-bloque');
+    const aLaVista = new Set();
+    const ioBarra = new IntersectionObserver((entradas) => {
+      entradas.forEach((en) => {
+        if (en.isIntersecting) aLaVista.add(en.target); else aLaVista.delete(en.target);
+      });
+      const yaApuntado = !!document.querySelector('.exito.visible');
+      barra.classList.toggle('visible', !yaApuntado && aLaVista.size === 0);
+    }, { rootMargin: '0px 0px -60px 0px' });
+    bloquesForm.forEach((b) => ioBarra.observe(b));
   }
 
   /* ---------- Baraja interactiva: mismo gesto que la app ---------- */
