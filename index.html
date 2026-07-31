@@ -86,7 +86,8 @@
     min-height: calc(100dvh - 64px);
     display: grid; grid-template-columns: 1.1fr .9fr;
     align-items: center; gap: 48px;
-    padding: 48px 0 64px;
+    /* Solo vertical: el lateral lo pone .contenedor (un shorthand aqui lo anularia) */
+    padding-top: 48px; padding-bottom: 64px;
   }
   h1 {
     font-family: var(--display); font-weight: 800;
@@ -324,7 +325,7 @@
       padding-left: max(28px, env(safe-area-inset-left, 0px));
       padding-right: max(28px, env(safe-area-inset-right, 0px));
     }
-    .hero { grid-template-columns: 1fr; gap: 40px; min-height: auto; padding: 40px 0 56px; }
+    .hero { grid-template-columns: 1fr; gap: 40px; min-height: auto; padding-top: 40px; padding-bottom: 56px; }
     .demo { height: 380px; }
     .tarjeta { height: 360px; }
     .paso { grid-template-columns: 1fr; gap: 8px; padding: 24px 0; }
